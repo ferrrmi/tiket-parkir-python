@@ -3,40 +3,47 @@ import qrcode
 from random import randint
 from datetime import datetime
 
-print("========== Konvensional Pos Masuk ===============")
+print("========== Manless Pos Masuk ===============")
 NamaLokasi = str(input("input Nama Lokasi: "))
+JenisKendaraan = str(input("Input Jenis Kendaraan: "))
+if JenisKendaraan == "MOBIL":
+    KodeKendaraan = "C"
+elif JenisKendaraan == "MOTOR":
+    KodeKendaraan = "M"
+else:
+    print("Kendaraan tidak terdaftar!")
+    exit()
 KodeLokasi = str(input("input Kode Lokasi: "))
 if len(KodeLokasi) > 2:
     print("Kode Lokasi terlalu panjang")
     exit()
-Nopol = str(input("input Nopol: "))
-if len(Nopol) > 8:
-    print("Nopol Terlalu Panjang")
-    exit()
+def KodeTiket(n):
+    range_awal = 10**(n-1)
+    range_akhir = (10**n)-1
+    return randint(range_awal, range_akhir)
+Nopol = str(KodeTiket(7))
 def KodeAcak(n):
     range_start = 10**(n-1)
     range_end = (10**n)-1
     return randint(range_start, range_end)
-NopolEnc = int(hashlib.sha256(Nopol.encode('utf-8')).hexdigest(), 16) % 10**8
+NopolEnc = int(hashlib.sha256(Nopol.encode('utf-8')).hexdigest(), 16) % 10**7
 KodeKunci = int(KodeAcak(2))
-NoTiket = str(KodeLokasi) + str(NopolEnc)[::-1] + str(KodeKunci)
+NoTiket = str(KodeLokasi) + str(KodeKendaraan) + str(NopolEnc)[::-1] + str(KodeKunci)
 now = datetime.now()
 current_time = now.strftime("%H:%M:%S")
 
-a=("          === TIKET PARKIR ===\n")
+a=("          --- Manless TIKET ---\n")
 b=("SELAMAT DATANG DI "+NamaLokasi+"\n")
-c=("Nomor Plat: " + Nopol+"\n")
 d=("Jam Masuk: " + current_time+"\n")
-e=("Nomor Tiket: " + NoTiket+"\n")
+e=("Nomor Tiket: "+NoTiket+"\n")
 f=("          Kunci kendaraan anda\n")
 g=("                  dan\n")
 h=("       jagalah barang bawaan anda.\n")
-PrintTextTop = str(a+b+c+d+e)
+PrintTextTop = str(a+b+d+e)
 PrintTextBot = str(f+g+h)
 print("--- log system ---")
 print("Lokasi: "+NamaLokasi)
-print("Kode Lokasi: "+KodeLokasi)
-print("No Plat Plat: "+Nopol)
+print("Jenis Kendaraan: "+JenisKendaraan)
 print("Jam Masuk: "+current_time)
 print("Nomor Tiket: "+NoTiket)
 
@@ -57,6 +64,6 @@ def QrCode():
     qr.make(fit=True)
     img = qr.make_image(fill='black', back_color='white')
     background.paste(img,(50,80))
-    background.save("tiket_konven_"+NoTiket+".png")
+    background.save("tiket_manless_"+NoTiket+".png")
 
 QrCode()
