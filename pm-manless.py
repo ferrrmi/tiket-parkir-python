@@ -26,25 +26,27 @@ def KodeAcak(n):
     range_start = 10**(n-1)
     range_end = (10**n)-1
     return randint(range_start, range_end)
-NopolEnc = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
-NopolEncrypt = int(hash(NopolEnc)) % (10 ** 8)
+NopolEnc = ''.join(random.choices(string.ascii_letters + string.digits, k=7))
+NopolEncrypt = int(hash(NopolEnc)) % (10 ** 7)
+NopolEncrypt = str(KodeKendaraan) + str(NopolEncrypt)
 KodeKunci = int(KodeAcak(2))
-NoTiket = str(KodeLokasi) + str(KodeKendaraan) + str(NopolEncrypt)[::-1] + str(KodeKunci)
+NoTiket = str(KodeLokasi) + str(NopolEncrypt) + str(KodeKunci)
 now = datetime.now()
 current_time = now.strftime("%H:%M:%S")
 PanjangNopol = len(str(NopolEncrypt))
 
-a=("          --- Manless TIKET ---\n")
+a=("TIKET PARKIR\n")
 b=("SELAMAT DATANG DI "+NamaLokasi+"\n")
-d=("Jam Masuk: " + current_time+"\n")
-e=("Nomor Tiket: "+NoTiket+"\n")
-f=("          Kunci kendaraan anda\n")
-g=("                  dan\n")
-h=("       jagalah barang bawaan anda.\n")
-PrintTextTop = str(a+b+d+e)
-PrintTextBot = str(f+g+h)
+d=("JAM MASUK   : " + current_time+"\n")
+e=("NOMOR TIKET : "+NoTiket+"\n")
+f=("KUNCI KENDARAAN ANDA\n")
+g=("DAN\n")
+h=("JAGALAH BARANG BAWAAAN ANDA\n")
+ver=("PM Manless V.1.0")
+PrintTextTop = str(d+e)
 print("--- log system ---")
-print("Lokasi: "+NamaLokasi)
+print("Nama Lokasi: "+NamaLokasi)
+print("Kode Lokasi: "+KodeLokasi)
 print("Jenis Kendaraan: "+JenisKendaraan)
 print("Jam Masuk: "+current_time)
 print("Nomor Tiket: "+NoTiket)
@@ -53,21 +55,35 @@ print("Nopol Encrypt: "+str(NopolEncrypt)+"\nPanjang Encrypt Nopol: "+str(Panjan
 
 def QrCode():
     from PIL import Image
-    background = Image.new('RGBA', (250, 280), (255,255,255,255))
+    W, H = (250,280)
+    background = Image.new('RGBA', (W, H), (255,255,255,255))
     from PIL import ImageDraw
     draw = ImageDraw.Draw(background)
-    draw.text((5,5), PrintTextTop, (0,0,0))
-    draw.text((5,230), PrintTextBot, (0,0,0))
+    w = draw.textsize(a)[0]
+    x = draw.textsize(b)[0]
+    bot_1 = draw.textsize(f)[0]
+    bot_2 = draw.textsize(g)[0]
+    bot_3 = draw.textsize(h)[0]
+    bot_4 = draw.textsize(ver)[0]
+    draw.text(((W-w)/2,5), a, (0,0,0))
+    draw.text(((W-x)/2,20), b, (0,0,0))
+    draw.text((5,50), PrintTextTop, (0,0,0))
+    draw.text(((W-bot_1)/2,225), f, (0,0,0))
+    draw.text(((W-bot_2)/2,235), g, (0,0,0))
+    draw.text(((W-bot_3)/2,245), h, (0,0,0))
+    draw.text(((W-bot_4)/2,265), ver, (0,0,0))
     # Link for website
     input_data = NoTiket
     #Creating an instance of qrcode
     qr = qrcode.QRCode(
         version=1,
-        box_size=5)
+        box_size=5,
+        border=1)
     qr.add_data(input_data)
     qr.make(fit=True)
     img = qr.make_image(fill='black', back_color='white')
-    background.paste(img,(50,80))
+    center = int(66.5)
+    background.paste(img,(center,93))
     background.save("tiket_manless_"+NoTiket+".png")
 
 QrCode()
