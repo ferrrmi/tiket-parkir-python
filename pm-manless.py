@@ -5,6 +5,9 @@ from datetime import datetime
 
 print("========== Manless Pos Masuk ===============")
 NamaLokasi = str(input("input Nama Lokasi: "))
+if NamaLokasi == "":
+    print("Nama Lokasi Kosong!")
+    exit()
 JenisKendaraan = str(input("Input Jenis Kendaraan: "))
 if JenisKendaraan == "MOBIL":
     KodeKendaraan = "C"
@@ -16,6 +19,12 @@ else:
 KodeLokasi = str(input("input Kode Lokasi: "))
 if len(KodeLokasi) > 2:
     print("Kode Lokasi terlalu panjang")
+    exit()
+elif KodeLokasi == "":
+    print("Kode Lokasi Kosong!")
+    exit()
+elif len(KodeLokasi) < 2:
+    print("Kode Lokasi Kurang!")
     exit()
 def KodeTiket(n):
     range_awal = 10**(n-1)
